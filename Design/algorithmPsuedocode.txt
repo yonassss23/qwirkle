@@ -1,0 +1,74 @@
+
+B = 2D vector of boardstate
+s = selection tile
+score
+
+
+SCOREVALIDATE(s):
+
+    score = [0,0,0,0]
+
+    directionTravel = [1,0,-1,0,0,1,0,-1]
+
+    directionAttribute = [shape/colour, shape/colour]
+
+    neighbours = [four locations immediate to s]
+
+    FOR i IN RANGE(0,4) DO
+
+        BOOLEAN halt = false
+        direction = i%2
+
+        TRY
+            node = GET node FROM B[neighbours[i]]
+        CATCH
+            (skip location if there's no tile)
+            i + 1 
+        
+        (checks if node is the same shape or colour, and updates the search match booleans accordingly)
+        IF node.colour == s.colour AND node.shape == s.shape DO
+            RETURN 0 (can't have of the same tile touching)
+
+        ELSE IF node.colour == s.colour DO
+            directionAttribute[direction] = "colour"
+
+        ELSE IF node.shape == s.shape DO
+            directionAttribute[direction] = "shape"
+
+        ELSE
+            (tile doesn't match, can't be placed, must leave method)
+            RETURN score 
+
+
+        WHILE halt != true DO
+
+            (if score in any direction is greater than six, it's invalid)
+            IF score[0+1] > 6 OR score[2+3] > 6 DO
+                RETURN 0
+
+            TRY
+                (try and set node to the next one in the direction currently travelling)
+                node = B[node.location.vertical+directionTravel[i], node.location.horizontal+directionTravel[i+4]
+
+                (if node matches the required attribute, increase score)
+                IF node.directionAttribute[direction] == s.directionAttribute[direction] DO
+                    score[i] + 1
+                ELSE
+                    i + 1
+            CATCH
+                i + 1
+            
+            halt = true
+            
+            
+
+
+
+
+    
+        
+
+
+
+    
+    
